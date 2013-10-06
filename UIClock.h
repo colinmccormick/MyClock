@@ -1,9 +1,9 @@
 //
 //  UIClock.h
-//  wattTime
+//  MyClock
 //
 //  Created by Colin McCormick on 10/3/13.
-//  Copyright (c) 2013 Novodox. All rights reserved.
+//  Copyright (c) 2013 Colin McCormick. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
