@@ -35,8 +35,7 @@
     [self setNeedsDisplay];
 }
 
-- (void)drawRect:(CGRect)rect
-{
+- (void)drawRect:(CGRect)rect {
     // Get context.  Remember origin is upper-left corner; y increases downwards.
     CGContextRef context = UIGraphicsGetCurrentContext();
     
@@ -51,8 +50,6 @@
     CGFloat fillFactor = 0.9; // Fraction of frame filled by clock
     CGFloat clockRadius = 0.5 * clockSize * fillFactor; // Radius of clock
     CGFloat tickLength = 0.1 * clockRadius;  // Length of clock tick marks
-    NSInteger numberFontSize = 24;  // Font size of clock numbers
-    NSInteger periodFontSize = 24;  // Font size of AM/PM indicator
     CGFloat hourHandLength = 0.5 * clockRadius;
     CGFloat hourHandExtension = 0.3;  // Fractional extension of hour hand on other side of center
     CGFloat minuteHandLength = 0.8 * clockRadius;
@@ -61,6 +58,11 @@
     CGFloat minuteHandWidth = 0.03 * clockRadius;
     CGFloat tickWidth = 0.02 * clockRadius;
     CGFloat circleWidth = 0.02 * clockRadius;
+    
+    // Determine font sizes
+    NSNumber *fontFraction = [NSNumber numberWithDouble:0.2 * clockRadius];
+    NSInteger numberFontSize = [fontFraction integerValue];   // Number font size
+    NSInteger periodFontSize = numberFontSize;  // Font size of AM/PM indicator
     
     // Make clock circle
     CGFloat xCenter = myBounds.size.width/2;
@@ -125,13 +127,15 @@
     CGContextSetLineWidth(context, minuteHandWidth);
     CGContextDrawPath(context, kCGPathStroke);
     
-    // Draw period indicator (AM/PM)
+    // Add period indicator label (AM/PM)
     CGRect periodRect = CGRectMake(xCenter + 0.3 * clockRadius, yCenter - 0.1 * clockRadius, 0.35 * clockRadius, 0.25 * clockRadius);
     CGContextAddRect(context, periodRect);
     CGContextSetLineWidth(context, circleWidth);
     CGContextDrawPath(context, kCGPathStroke);
     UIFont *periodFont = [UIFont fontWithName:@"Helvetica" size:periodFontSize];
-    NSDictionary *periodAttributes = [NSDictionary dictionaryWithObjectsAndKeys:periodFont, NSFontAttributeName, nil];
+    NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+    [paragraphStyle setAlignment:NSTextAlignmentCenter];
+    NSDictionary *periodAttributes = [NSDictionary dictionaryWithObjectsAndKeys:periodFont, NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, nil];
     NSString *periodString = ([theHour intValue] < 12) ? @"AM" : @"PM";
     [periodString drawInRect:periodRect withAttributes:periodAttributes];
 }
