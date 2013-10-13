@@ -8,10 +8,6 @@
 
 #import "ViewController.h"
 
-@interface ViewController ()
-
-@end
-
 @implementation ViewController
 
 @synthesize datePicker = _datePicker;
@@ -22,17 +18,23 @@
     [self.clockView setClockTime:datePicked];
 }
 
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
+- (IBAction)tickButtonTouched:(id)sender {
+    [updateTimer invalidate];
+    updateTimer = nil;
+    if (tickButton.selectedSegmentIndex == 1) {
+        [self updateClock];
+        updateTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(updateClock) userInfo:nil repeats:YES];
+    }
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)updateClock {
+    [self.clockView setClockTime:[NSDate date]];
+    [self.datePicker setDate:[NSDate date] animated:YES];
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self tickButtonTouched:tickButton];
 }
 
 @end
